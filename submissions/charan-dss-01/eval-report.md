@@ -54,8 +54,3 @@ A wrongly filed claim costs a seller standing with the channel, while a missed c
 - **Scenario:** Amazon issues a refund claiming the customer never returned the unit. Seller assumes the unit was returned because 30 days elapsed.
 - **Agent Handling:** The agent searches the Returns Desk database. Because no physical return record with `identity_match: yes` exists, the agent returns `SILENT` ($0 claim) rather than assuming channel error.
 - **Outcome:** Refused ungrounded dispute without physical proof.
-
-### Failure Mode 3: Disputed Weight Tier Without Calibrated Scale Log
-- **Scenario:** Seller is charged a higher weight tier fee ($5.10 vs $4.25).
-- **Agent Handling:** Upstream records contain SKU dimensions from catalog, but no certified scale weigh-in log at packing. The agent returns `SILENT` with missing proof checklist.
-- **Outcome:** Protected seller from filing claims without certified scale calibration certificates.

@@ -7,6 +7,17 @@ db_url = settings.DATABASE_URL
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
+# Ensure compatible driver prefix for PostgreSQL in SQLAlchemy 2.0 / 2.1+
+if db_url.startswith("postgresql://") and "+psycopg" not in db_url:
+    try:
+        import psycopg  # psycopg v3
+    except ImportError:
+        try:
+            import psycopg2  # psycopg v2 fallback
+            db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        except ImportError:
+            pass
+
 connect_args = {}
 if db_url.startswith("sqlite"):
     connect_args = {"check_same_thread": False}

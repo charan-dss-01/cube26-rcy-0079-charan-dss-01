@@ -1,5 +1,7 @@
 const getApiBase = () => {
-  const raw = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+  const raw =
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://rcy-recovery-backend.onrender.com/api/v1";
   const trimmed = raw.replace(/\/+$/, "");
   return trimmed.endsWith("/api/v1") ? trimmed : `${trimmed}/api/v1`;
 };

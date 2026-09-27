@@ -1,14 +1,52 @@
 # Cube Buildathon · 05 · Recovery Manager
 
-**Commerce Context stream · Round 2 · Individual Build**
+**Commerce Context stream · Round 2 · Individual Build · Charan (`charan-dss-01`)**
 
 > Five agents, one unit, one record that follows it.
 > A physical product arrives, gets prepped, gets shipped, comes back. At every step a person makes a fast judgment that nobody records. **You build the agent that makes one of those judgments, and leaves proof.**
 
-**New here? Read these first:**
+---
 
-1. [`GITHUB-GUIDE.md`](GITHUB-GUIDE.md) explains how to fork the repository, set it up, build and push your work.
-2. [`RULES.md`](RULES.md) covers the repository and engineering rules.
+## 🚀 Live Working Implementation & Submission Assets
+
+This repository houses the complete, working **RCY Recovery Operations Center**:
+
+- **Submissions Index:** [`submissions/charan-dss-01/README.md`](submissions/charan-dss-01/README.md)
+- **Customer Letter:** [`submissions/charan-dss-01/01-customer-letter.md`](submissions/charan-dss-01/01-customer-letter.md)
+- **PR/FAQ:** [`submissions/charan-dss-01/02-prfaq.md`](submissions/charan-dss-01/02-prfaq.md)
+- **One-Pager:** [`submissions/charan-dss-01/03-one-pager.md`](submissions/charan-dss-01/03-one-pager.md)
+- **Durable Constraints & Rules:** [`submissions/charan-dss-01/CLAUDE.md`](submissions/charan-dss-01/CLAUDE.md)
+- **Architecture Specification:** [`ARCHITECTURE.md`](ARCHITECTURE.md)
+- **Evaluation & Precision Report:** [`submissions/charan-dss-01/eval-report.md`](submissions/charan-dss-01/eval-report.md)
+- **Cross-Pod Contract:** [`submissions/charan-dss-01/contract/evidence_contract.json`](submissions/charan-dss-01/contract/evidence_contract.json)
+- **Headless Agent CLI Runner:** [`submissions/charan-dss-01/agent/run_recovery.py`](submissions/charan-dss-01/agent/run_recovery.py)
+
+---
+
+### Quickstart Guide
+
+#### 1. Backend (FastAPI + Multi-Tenant SQLite/PostgreSQL)
+```powershell
+cd backend
+pip install -r requirements.txt
+python seed.py        # Seeds baseline multi-tenant datasets (Alpha & Bravo)
+pytest tests/ -v      # Runs automated verification suite (8/8 passing)
+uvicorn app.main:app --port 8000 --reload
+```
+
+#### 2. Frontend (Next.js 14 + Tailwind CSS + Recharts)
+```powershell
+cd frontend
+npm install
+npm run build         # Validates production build
+npm run dev           # Serves operations center at http://localhost:3000
+```
+
+#### 3. Headless Agent CLI
+```powershell
+cd submissions/charan-dss-01/agent
+python run_recovery.py --company org_demo_alpha
+```
 
 ---
 

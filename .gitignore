@@ -7,3 +7,8 @@ __pycache__/
 .venv/
 venv/
 .DS_Store
+.next/
+.pytest_cache/
+*.db
+uploads/
+

@@ -11,11 +11,11 @@ app = FastAPI(
     description="RCY AI-Powered Recovery Operations Center: Evidence-Grounded Financial Recovery Claims Engine"
 )
 
-# CORS Middleware
+# CORS Middleware - allows local dev and deployed Vercel frontends
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

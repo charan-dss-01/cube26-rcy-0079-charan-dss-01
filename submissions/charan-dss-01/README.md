@@ -6,6 +6,14 @@ The AI Recovery Operations Center converts operational evidence logs (Receiving,
 
 ---
 
+## 🌐 Live Production Deployments
+
+- **Frontend Operations Center (Vercel):** [https://cube26-rcy-0079.vercel.app/](https://cube26-rcy-0079.vercel.app/)
+- **Backend REST API Core (Render):** [https://rcy-recovery-backend.onrender.com/](https://rcy-recovery-backend.onrender.com/)
+- **Interactive API Documentation:** [https://rcy-recovery-backend.onrender.com/docs](https://rcy-recovery-backend.onrender.com/docs)
+
+---
+
 ## Deliverables Index
 
 | Document | Purpose |

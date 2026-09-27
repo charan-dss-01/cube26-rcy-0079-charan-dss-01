@@ -3,6 +3,10 @@
 ## Executive Summary
 Recovery Manager transforms disconnected physical warehouse records (Receiving, Prep, Pack, Returns) into defensible, audit-grade financial recovery claims against e-commerce channel deductions. Operating strictly without computer vision or hallucinated amounts, it uses conservative hybrid RAG and deterministic legal validation to maintain 100% claim precision.
 
+**Live Production Deployments:**
+- **Operations Center (Frontend):** [https://cube26-rcy-0079.vercel.app/](https://cube26-rcy-0079.vercel.app/)
+- **REST API Core (Backend):** [https://rcy-recovery-backend.onrender.com/](https://rcy-recovery-backend.onrender.com/)
+
 ---
 
 ## Core Product Metrics Table

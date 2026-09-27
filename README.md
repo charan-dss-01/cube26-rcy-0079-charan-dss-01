@@ -7,6 +7,16 @@
 
 ---
 
+## 🌐 Live Production Deployments
+
+| Component | Platform | Live URL | Status |
+|---|---|---|---|
+| **Frontend Operations Center** | Vercel | [https://cube26-rcy-0079.vercel.app/](https://cube26-rcy-0079.vercel.app/) | ✅ Online |
+| **Backend REST API Core** | Render | [https://rcy-recovery-backend.onrender.com/](https://rcy-recovery-backend.onrender.com/) | ✅ Online |
+| **API Documentation (Swagger)** | Render | [https://rcy-recovery-backend.onrender.com/docs](https://rcy-recovery-backend.onrender.com/docs) | ✅ Online |
+
+---
+
 ## 🚀 Live Working Implementation & Submission Assets
 
 This repository houses the complete, working **RCY Recovery Operations Center**:

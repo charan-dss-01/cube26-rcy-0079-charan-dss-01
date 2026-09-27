@@ -8,6 +8,11 @@ The **RCY Recovery Manager** is an evidence-grounded AI financial recovery opera
 
 ## 1. System Topology & Data Flow
 
+**Production Deployments:**
+- **Frontend (Vercel):** [https://cube26-rcy-0079.vercel.app/](https://cube26-rcy-0079.vercel.app/)
+- **Backend (Render):** [https://rcy-recovery-backend.onrender.com/](https://rcy-recovery-backend.onrender.com/)
+- **API Swagger Docs:** [https://rcy-recovery-backend.onrender.com/docs](https://rcy-recovery-backend.onrender.com/docs)
+
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                          Next.js 14 Enterprise UI                               │

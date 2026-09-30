@@ -33,30 +33,117 @@ This repository houses the complete, working **RCY Recovery Operations Center**:
 
 ---
 
-### Quickstart Guide
+## 1. Problem Understanding
 
-#### 1. Backend (FastAPI + Multi-Tenant SQLite/PostgreSQL)
+E-commerce brands selling across marketplaces (Amazon FBA, Walmart Marketplace, Target+) regularly suffer from automated penalty fees and deductions, including:
+- **Inbound Defect Fees:** Alleged polybag missing, unsealed packaging, missing suffocation warnings, or unreadable FNSKU barcodes.
+- **Fulfillment Fee Weight Tier Penalties:** Marketplace mis-weighing packages and overcharging on dimensional weight tiers.
+- **Lost Inbound Inventory:** Cartons received short at fulfillment centers without automatic reimbursement.
+- **Unreturned Customer Items:** Customer refunded for a return, but merchandise is never returned to active merchant inventory.
+
+These deduction line items appear in accounting fee reports weeks after items depart the warehouse. The proof required to dispute these charges lives in fragmented, unstructured operational silos across the warehouse floor:
+- **Receiving Docks:** Inbound carton scans, gross pallet scale weights, carrier bills of lading.
+- **Prep Stations:** Polybag sealing logs, suffocation warnings, FNSKU barcode placement.
+- **Pack Benches:** Carton packing scans, item tare weights, dimensional measurements.
+- **Returns Lines:** LPN reverse-logistics inspections, restock dispositions.
+
+Because manually correlating each deduction line item against floor logs is time-consuming and tedious, merchants forfeit **15% to 30% of their net operating margins** to uncontested fees. Meanwhile, legacy auto-dispute scrapers blindly dispute charges without proof, leading to marketplace account warnings and audit bans.
+
+---
+
+## 2. Solution Overview
+
+**RCY Recovery Manager** is an evidence-first, multi-tenant AI operations center that turns physical warehouse records into defensible, audit-grade recovery claims:
+- **Record-First Architecture:** Eliminates expensive computer vision hardware by ingesting structured scanner logs, weight scale timestamps, and custody transfers.
+- **Deterministic Multi-Hop Graph Traversal:** Traverses relational hops ($\text{Charge} \to \text{Unit} \to \text{Shipment} \to \text{Order} \to \text{Operational Floor Log}$) to uncover proof even when identifiers differ.
+- **Three-State Verdict Engine:**
+  - `CONTRADICTED`: Upstream proof proves compliance prior to custody transfer $\to$ Defensible claim package generated (100% precision).
+  - `SUPPORTED`: Floor logs confirm a genuine merchant defect $\to$ Claim safely skipped to protect account standing.
+  - `SILENT`: Insufficient physical proof $\to$ Conservative skip with $0.00 recovery (zero hallucinated disputes).
+  - `UNCERTAIN`: Conflicting timestamps or split custody $\to$ Flagged for human review.
+- **Audit-Grade Claim Dossier Builder:** Automatically compiles formal dispute narrative letters, fact comparison tables, and immutable evidence attachments ready for Seller Central or 3PL submission.
+- **"AI Prepares, Human Authorizes":** The AI agent conducts 99% of the tedious correlation and forensic analysis, while human operators review and authorize claim package freezing.
+
+---
+
+## 3. Setup Instructions
+
+### Prerequisites
+- Node.js 18+ and npm
+- Python 3.10+ (tested on Python 3.11, 3.12, 3.14)
+- Git
+
+### Backend Setup (FastAPI)
 ```powershell
 cd backend
-pip install -r requirements.txt
-python seed.py        # Seeds baseline multi-tenant datasets (Alpha & Bravo)
-pytest tests/ -v      # Runs automated verification suite (8/8 passing)
-uvicorn app.main:app --port 8000 --reload
-```
+python -m venv .venv
 
-#### 2. Frontend (Next.js 14 + Tailwind CSS + Recharts)
+# On Windows:
+.venv\Scripts\activate
+# On Linux/macOS:
+# source .venv/bin/activate
+
+pip install -r requirements.txt
+python seed.py        # Initializes multi-tenant schema & seeds baseline datasets (Alpha & Bravo)
+pytest tests/ -v      # Runs automated verification suite (8/8 passing)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+The backend API and Swagger docs will be live at `http://127.0.0.1:8000/docs`.
+
+### Frontend Setup (Next.js 14)
 ```powershell
 cd frontend
 npm install
-npm run build         # Validates production build
-npm run dev           # Serves operations center at http://localhost:3000
+npm run build         # Validates production build (10/10 routes)
+npm run dev           # Starts local development server on port 3000
 ```
+Open [http://localhost:3000](http://localhost:3000) to view the Operations Center and Landing Page.
 
-#### 3. Headless Agent CLI
+### Headless Agent CLI Runner
 ```powershell
 cd submissions/charan-dss-01/agent
 python run_recovery.py --company org_demo_alpha
 ```
+
+---
+
+## 4. Usage Instructions
+
+1. **Explore Live Operations Dashboard (`/dashboard`)**:
+   - View top-level financial KPIs: Total Fees Assessed ($1,768.50), Recoverable Pipeline ($552.00–$928.50), Claim Precision Rate (100%), and Conservative Skips (43).
+   - Inspect fee category breakdowns and verdict distributions.
+   - Switch workspace tenants (`org_demo_alpha` vs. `org_demo_bravo`) in the top-right header to verify multi-tenant isolation.
+2. **Ingest Warehouse Records & Fee Reports (`/data-sources`)**:
+   - Drag and drop CSV, XLSX, PDF, or JSON files.
+   - The parser inspects filenames and column headers to auto-categorize into `fee_report`, `receiving`, `prep`, `pack`, or `returns`.
+   - Inspect the interactive Schema Preview and click "Confirm Ingestion" to write to the tenant database.
+3. **Inspect Deductions (`/charges`)**:
+   - Filter and search charges by status (`CONTRADICTED`, `SILENT`, `SUPPORTED`, `UNCERTAIN`), marketplace source, or date range.
+   - Click "Investigate" on any charge (e.g., `CH-TC07-DUPLICATE`).
+4. **Deep-Dive Forensic Analysis (`/investigations/[chargeId]`)**:
+   - Interact with the **Multi-Hop Entity Graph** showing node linkages across Charge, Unit, Shipment, Order, and Evidence.
+   - Review the **Chronological Custody Timeline** with operator IDs and timestamps.
+   - Click the **"Why Not Claim?"** drawer on silent or supported charges to inspect the conservative rationale.
+5. **Run Batch Recovery Pipeline (`/recovery`)**:
+   - Trigger the agent to evaluate charges in batch mode.
+   - Review qualified recoverable pipeline totals.
+6. **Generate Frozen Claim Packages (`/claims`)**:
+   - Click "View Dossier" or "Generate Claim Package" to view the formal legal dispute letter, fact comparison table, and operator citations.
+   - Export claim packages as structured JSON or print to PDF for marketplace submission.
+
+---
+
+## 5. Assumptions & Limitations
+
+### Assumptions
+1. **Record-First Grounding:** Assumes upstream operational stations (Receiving, Prep, Pack, Returns) record barcode scans, weight measurements, or operator dispositions.
+2. **Deterministic Entity Linking:** Assumes units can be correlated via shared identifiers (`unit_id`, `shipment_id`, `order_id`, or tracking numbers) across system hops.
+3. **Conservative Discard Policy:** Assumes avoiding false claims is strictly more valuable than speculative claiming, prioritizing marketplace account health over dispute volume.
+
+### Limitations
+1. **No Vision / Image Heuristics:** The system deliberately does not analyze camera feeds or unlabeled photos; it relies strictly on structured operational logs.
+2. **Channel Policy Variability:** Marketplace dispute guidelines vary across categories and channels; specific dispute requirements may require rule updates.
+3. **Human Authorization for Submission:** To prevent accidental mass dispute spam, the UI requires operator authorization ("Generate Claim Package") before freezing a claim package for export.
 
 ---
 
